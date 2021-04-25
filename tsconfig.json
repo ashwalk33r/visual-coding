@@ -13,6 +13,7 @@
         "paths": {
             "@src/*": ["*"],
             "@app/*": ["app/*"],
+            "@util": ["util/util"],
         },
         "allowJs": true,
         "allowSyntheticDefaultImports": true,
