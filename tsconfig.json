@@ -1,0 +1,22 @@
+{
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules"],
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "module": "commonjs",
+        "target": "esnext",
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "moduleResolution": "node",
+        "baseUrl": "./src/", // for "paths", use imports as "@/name"
+        "paths": {
+            "@src/*": ["*"],
+            "@app/*": ["app/*"],
+        },
+        "allowJs": true,
+        "allowSyntheticDefaultImports": true,
+        "noImplicitAny": false,
+        "strictNullChecks": true
+    }
+}
