@@ -1,9 +1,15 @@
-body {
-  height: 100vh;
-  box-sizing: border-box;
-  padding: 20px;
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-.scene { width: 100%; height: 100%; }
+body {
+  box-sizing: border-box;
+}
+
+svg {
+  box-sizing: border-box;
+}
 
 @import './chapter-01/01-space-out-dots-in-rectangle.scss';
