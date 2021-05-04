@@ -1,4 +1,4 @@
-import { html, viewport } from '@src/util/util';
+import { html } from '@util';
 
 export interface UtilCanvas {
     context: CanvasRenderingContext2D;
