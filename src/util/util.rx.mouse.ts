@@ -1,7 +1,7 @@
 import { fromEvent } from 'rxjs';
 import { sampleTime, startWith } from 'rxjs/operators';
 import { display, viewport } from '@util';
-const { width, height } = viewport.bbox();
+const { width, height } = viewport.size();
 
 export const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove') //
     .pipe(

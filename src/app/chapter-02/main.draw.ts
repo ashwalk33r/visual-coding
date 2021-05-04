@@ -1,4 +1,4 @@
-import { select } from 'd3';
+import { select, selectAll } from 'd3';
 import { DrawCardsOptions, DrawCirclesOptions } from './main.types';
 import { hand } from './main.input';
 
@@ -8,7 +8,7 @@ export namespace draw {
      *
      * @param cssClass - drawn elements CSS class
      * @param count - how many cards to draw
-     * @param {SVGElement} svgDOM
+     * @param {HTMLCanvasElement} canvas
      * @param width - how much visual space there is to draw
      * @param y - circle y position
      * @param color - circle color
@@ -16,42 +16,57 @@ export namespace draw {
      * @param offset - where elements have to be spaced out more - offset (position) for normal distribution function distributor
      * @param flatness - flatness of normal distribution function distributor
      */
-    export function cards([cssClass, count, svgDOM, width, y, color, padding = 0, offset = 0, flatness = 3.2]: DrawCardsOptions): void {
-        const svg = select<SVGElement, number>(svgDOM);
-
+    export function cards([cssClass, count, canvas, width, y, color, padding = 0, offset = 0, flatness = 3.2]: DrawCardsOptions): void {
         const data = Array.isArray(count) //
             ? count
             : hand.spaceOut([count, width * padding, width * (1 - padding), offset, flatness]);
 
-        circles([svg, cssClass, data, y, 10, color]);
+        circles([canvas, cssClass, data, y, 10, color]);
     }
 
     /**
      * @returns - d3 Selection of created Circles
-     * @param svg - d3 SVG Selection
+     * @param canvas - canvas object (decorated)
      * @param cssClass - drawn elements CSS class
      * @param data - d3 data to .enter()
      * @param y - circle y position
      * @param r - circle radius
      * @param color - circle color
      */
-    function circles([svg, cssClass, data, y, r, color]: DrawCirclesOptions): void {
-        const _circles = svg //
-            .selectAll<SVGCircleElement, number[]>(`circle.${cssClass}`)
+    function circles([canvas, cssClass, data, y, r, color]: DrawCirclesOptions): void {
+        const selector = `circle.${cssClass}`;
+
+        const _circles = select<HTMLCanvasElement, number>(canvas.element) //
+            .selectAll<SVGCircleElement, number[]>(selector)
             .data(data);
 
         _circles //
             .enter()
             .append('circle')
             .attr('class', cssClass)
-            .style('fill', color)
-            .attr('cy', y)
+            .attr('color', color)
+            .attr('y', y)
             .attr('r', r)
             .merge(_circles)
-            .attr('cx', (d) => d);
+            .attr('x', (d) => d);
 
-        const exit = _circles //
+        _circles //
             .exit()
             .remove();
+
+        selectAll<HTMLCanvasElement, number>(selector)
+            .nodes()
+            .forEach((node) => {
+                canvas.context.fillStyle = node.getAttribute('color') as string;
+                canvas.context.beginPath();
+                canvas.context.arc(
+                    parseInt(node.getAttribute('x') as string, 10) || 0, //
+                    parseInt(node.getAttribute('y') as string, 10) || 0,
+                    parseInt(node.getAttribute('r') as string, 10) || 0,
+                    0,
+                    2 * Math.PI
+                );
+                canvas.context.fill();
+            });
     }
 }

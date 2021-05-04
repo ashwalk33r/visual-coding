@@ -8,7 +8,7 @@ const viewBox = 100;
 
 const coord = scaleLinear().domain([0, 100]).range([-viewBox, viewBox]);
 
-const scene = html.createElement({
+const scene = html.createElement<SVGElement>({
     tag: 'svg',
     attributes: [
         ['width', size],

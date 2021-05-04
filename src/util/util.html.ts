@@ -9,7 +9,7 @@ interface createElementOptions {
     attributes?: (string | number)[][];
 }
 
-export function createElement(options: createElementOptions) {
+export function createElement<T>(options: createElementOptions): T {
     const tag = options?.tag || 'div';
     let element;
 

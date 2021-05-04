@@ -1,7 +1,7 @@
 import { html, viewport } from '@src/util/util';
 
-export const createCanvas = () => {
-    const size = viewport.bbox();
+export const create = () => {
+    const size = viewport.size();
 
     return html.createElement({
         tag: 'svg',
