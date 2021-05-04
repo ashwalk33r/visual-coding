@@ -82,7 +82,7 @@ export namespace mouse {
     }
 
     /**
-     * @returns - scaling function for mouse X position
+     * @returns - scaling function for mouse X position - space out elements approaching to mouse position
      *
      * @param cardsInHand - scales more higher the `cardsInHand` is
      * @param width - scale from ~`-width` to ~`width` (with modifications)
@@ -96,7 +96,7 @@ export namespace mouse {
     }
 
     /**
-     * @returns - scaling function for mouse Y position
+     * @returns - scaling function for mouse Y position - space out elements approaching mouse position
      *
      * @param height - scale from 0 to `height`
      */

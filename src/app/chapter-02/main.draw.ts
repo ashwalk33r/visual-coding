@@ -1,8 +1,13 @@
 import { select, selectAll } from 'd3';
+import { CANVAS } from '@util';
 import { DrawCardsOptions, DrawCirclesOptions } from './main.types';
 import { hand } from './main.input';
 
 export namespace draw {
+    export function clear(canvas: CANVAS.UtilCanvas) {
+        canvas.context.clearRect(0, 0, canvas.element.width, canvas.element.height);
+    }
+
     /**
      * @returns - d3 Selection of created elements
      *
@@ -34,39 +39,50 @@ export namespace draw {
      * @param color - circle color
      */
     function circles([canvas, cssClass, data, y, r, color]: DrawCirclesOptions): void {
-        const selector = `circle.${cssClass}`;
+        createElements(arguments[0] as DrawCirclesOptions);
+        drawElements(cssClass, canvas.context);
+    }
 
-        const _circles = select<HTMLCanvasElement, number>(canvas.element) //
-            .selectAll<SVGCircleElement, number[]>(selector)
+    /**
+     * General update pattern elements
+     */
+    function createElements([canvas, cssClass, data, y, r, color]: DrawCirclesOptions) {
+        const selection = select<HTMLCanvasElement, number>(canvas.element) //
+            .selectAll<SVGCircleElement, number[]>(`circle.${cssClass}`)
             .data(data);
 
-        _circles //
+        selection //
             .enter()
             .append('circle')
             .attr('class', cssClass)
             .attr('color', color)
             .attr('y', y)
             .attr('r', r)
-            .merge(_circles)
+            .merge(selection)
             .attr('x', (d) => d);
 
-        _circles //
+        selection //
             .exit()
             .remove();
+    }
 
-        selectAll<HTMLCanvasElement, number>(selector)
+    /**
+     * Canvas drawing
+     */
+    function drawElements(cssClass: string, context: CanvasRenderingContext2D) {
+        selectAll<HTMLCanvasElement, number>(`.${cssClass}`)
             .nodes()
             .forEach((node) => {
-                canvas.context.fillStyle = node.getAttribute('color') as string;
-                canvas.context.beginPath();
-                canvas.context.arc(
+                context.fillStyle = node.getAttribute('color') as string;
+                context.beginPath();
+                context.arc(
                     parseInt(node.getAttribute('x') as string, 10) || 0, //
                     parseInt(node.getAttribute('y') as string, 10) || 0,
                     parseInt(node.getAttribute('r') as string, 10) || 0,
                     0,
                     2 * Math.PI
                 );
-                canvas.context.fill();
+                context.fill();
             });
     }
 }

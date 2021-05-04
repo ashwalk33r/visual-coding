@@ -1,6 +1,7 @@
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, of } from 'rxjs';
 import { mouse } from './main.input';
 import { Renderer } from './main.types';
+import { CANVAS } from '@util';
 
 /**
  * @returns - renderer Observable
@@ -10,7 +11,9 @@ import { Renderer } from './main.types';
  * @param height - see `createDistributorOptionsObservable`
  */
 export function createRendererObservable(cardsInHand: number, width: number, height: number): Observable<Renderer> {
+    const canvas$ = of(CANVAS.create(width, height));
+
     const distributorOptions$ = mouse.createDistributorOptionsObservable(cardsInHand, width, height);
 
-    return combineLatest([distributorOptions$]);
+    return combineLatest([canvas$, distributorOptions$]);
 }
