@@ -7,7 +7,13 @@ const TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 module.exports = (env, argv) => {
     const config = {
         target: ['web'],
-        devtool: argv.mode === 'development' ? 'source-map' : 'none',
+        devtool: 'source-map',
+        devServer: {
+            contentBase: './dist',
+        },
+        watchOptions: {
+            poll: 100,
+        },
         entry: {
             index: './src/index.ts',
             // separateFile: './src/2nd.js',
@@ -23,14 +29,21 @@ module.exports = (env, argv) => {
                 new TsConfigPathsPlugin(), // instead of webpack `alias` use TS `paths`
             ],
         },
+        mode: 'development',
         optimization: {
+            usedExports: true,
             moduleIds: 'deterministic',
             runtimeChunk: 'single',
             splitChunks: {
                 cacheGroups: {
-                    vendor: {
-                        test: /[\\/]node_modules[\\/]/,
-                        name: 'vendor',
+                    'vendor-d3': {
+                        test: /node_modules\/d3/,
+                        name: 'vendor-d3',
+                        chunks: 'all',
+                    },
+                    'vendor-common': {
+                        test: /node_modules\/(?!d3).*/,
+                        name: 'vendor-common',
                         chunks: 'all',
                     },
                 },
@@ -69,8 +82,6 @@ module.exports = (env, argv) => {
             }),
         ],
     };
-
-    console.log(config);
 
     return { ...config };
 };
