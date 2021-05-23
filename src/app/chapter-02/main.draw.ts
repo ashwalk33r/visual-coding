@@ -27,9 +27,11 @@ export namespace draw {
      * @param flatness - flatness of normal distribution function distributor
      */
     export function cards([cssClass, count, sketch, width, y, color, padding = 0, offset = 0, flatness = 3.2]: DrawCardsOptions): void {
+        const _padding = width * padding * 0.5;
+
         const data = Array.isArray(count) //
             ? count
-            : hand.spaceOut([count, width * padding, width * (1 - padding), offset, flatness]);
+            : hand.spaceOut([count, width / -2 + _padding, width / 2 - _padding, offset, flatness]);
 
         circles([sketch, cssClass, data, y, 20, color]);
     }

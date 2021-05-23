@@ -23,7 +23,7 @@ export class Sketch {
     }
 
     private _setup(p5: P5): void {
-        p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.P2D);
+        p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL);
         p5.frameRate(display.desiredFps);
         p5.angleMode(p5.DEGREES);
 
