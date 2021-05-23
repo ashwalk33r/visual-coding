@@ -20,16 +20,14 @@ export namespace hand {
         const step = flatness * Math.sqrt(2);
         const ease = (x) => 0.5 * (1 + erf((x - offset) / step));
 
-        const inputs = generate(count);
-
-        const eased = inputs.map(ease);
-        const extremes = extent(eased) as numberTuple;
+        const inputs = generate(count).map(ease);
+        const extremes = extent(inputs) as numberTuple;
 
         const scale = scaleLinear() //
             .domain([extremes[0], extremes[1]])
             .range([left, right]);
 
-        return eased.map(scale);
+        return inputs.map(scale);
     }
 
     /**

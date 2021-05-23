@@ -19,6 +19,7 @@ export namespace draw {
     /**
      * Draws cards
      *
+     * @param count - how many cards to draw
      * @param sketch - p5 sketch
      * @param width - how much visual space there is to draw
      * @param y - circle y position
@@ -28,11 +29,11 @@ export namespace draw {
      * @param flatness - flatness of normal distribution function distributor
      */
     export function cards([count, sketch, width, y, color, padding = 0, offset = 0, flatness = 3.2]: DrawCardsOptions): void {
-        const _padding = width * padding * 0.5;
+        const _width = width / 2 - width * padding * 0.5;
 
         const data = Array.isArray(count) //
             ? count
-            : hand.spaceOut([count, width / -2 + _padding, width / 2 - _padding, offset, flatness]);
+            : hand.spaceOut([count, -_width, _width, offset, flatness]);
 
         data.forEach((x) => {
             sketch.push();
