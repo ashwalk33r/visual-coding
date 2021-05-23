@@ -3,8 +3,9 @@ import { DrawCardsOptions } from './main.types';
 import { hand } from './main.input';
 import { desiredFpsTime } from '@src/util/util.display';
 
+// TODO - remake `rotation` to a stream
 let rotation = 0;
-setInterval(() => (rotation = new Date().getTime() / 10) % 360, desiredFpsTime);
+setInterval(() => (rotation = (new Date().getTime() / 10) % 360), desiredFpsTime);
 
 export namespace draw {
     /**
@@ -27,8 +28,9 @@ export namespace draw {
      * @param padding - taken off width parameter on left & right sides
      * @param offset - where elements have to be spaced out more - offset (position) for normal distribution function distributor
      * @param flatness - flatness of normal distribution function distributor
+     * @param texture - p5 texture
      */
-    export function cards([count, sketch, width, y, color, padding = 0, offset = 0, flatness = 3.2]: DrawCardsOptions): void {
+    export function cards([count, sketch, width, y, color, padding = 0, offset = 0, flatness = 3.2, texture]: DrawCardsOptions): void {
         const _width = width / 2 - width * padding * 0.5;
 
         const data = Array.isArray(count) //
@@ -41,8 +43,20 @@ export namespace draw {
             sketch.fill(color);
             sketch.translate(x, y);
             sketch.rotateY(rotation);
+
+            if (texture) {
+                if (rotation >= 90 && rotation <= 270) {
+                    sketch.texture(texture[1]);
+                } else {
+                    sketch.texture(texture[0]);
+                }
+
+                sketch.plane(100, 140);
+            } else {
+                sketch.circle(x, y, 20);
+            }
+
             sketch.translate(-x, -y);
-            sketch.circle(x, y, 20);
             sketch.pop();
         });
     }

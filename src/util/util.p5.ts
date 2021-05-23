@@ -26,8 +26,10 @@ export class Sketch {
         p5.createCanvas(p5.windowWidth, p5.windowHeight, p5.WEBGL);
         p5.frameRate(display.desiredFps);
         p5.angleMode(p5.DEGREES);
+        p5.ortho();
 
         this.setupSubject.next(p5);
+        this.setupSubject.complete();
     }
 
     private _draw(p5: P5): void {

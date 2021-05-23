@@ -68,7 +68,7 @@ export namespace mouse {
      * @param width - used for `createScaleMouseX`
      * @param height - used for `createScaleMouseY`
      */
-    export function createDistributorOptionsObservable(cardsInHand, width, height): Observable<DistributorOptions> {
+    export function createDistributorOptionsObservable(cardsInHand: number, width: number, height: number): Observable<DistributorOptions> {
         const scaleMouseX = createScaleMouseX(cardsInHand, width);
         const scaleMouseY = createScaleMouseY(height);
 
