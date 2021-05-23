@@ -1,7 +1,10 @@
-import { select, selectAll } from 'd3';
-import { DrawCardsOptions, DrawCirclesOptions } from './main.types';
-import { hand } from './main.input';
 import P5 from 'p5';
+import { DrawCardsOptions } from './main.types';
+import { hand } from './main.input';
+import { desiredFpsTime } from '@src/util/util.display';
+
+let rotation = 0;
+setInterval(() => (rotation = new Date().getTime() / 10) % 360, desiredFpsTime);
 
 export namespace draw {
     /**
@@ -14,10 +17,8 @@ export namespace draw {
     }
 
     /**
-     * @returns - d3 Selection of created elements
+     * Draws cards
      *
-     * @param cssClass - drawn elements CSS class
-     * @param count - how many cards to draw
      * @param sketch - p5 sketch
      * @param width - how much visual space there is to draw
      * @param y - circle y position
@@ -26,79 +27,22 @@ export namespace draw {
      * @param offset - where elements have to be spaced out more - offset (position) for normal distribution function distributor
      * @param flatness - flatness of normal distribution function distributor
      */
-    export function cards([cssClass, count, sketch, width, y, color, padding = 0, offset = 0, flatness = 3.2]: DrawCardsOptions): void {
+    export function cards([count, sketch, width, y, color, padding = 0, offset = 0, flatness = 3.2]: DrawCardsOptions): void {
         const _padding = width * padding * 0.5;
 
         const data = Array.isArray(count) //
             ? count
             : hand.spaceOut([count, width / -2 + _padding, width / 2 - _padding, offset, flatness]);
 
-        circles([sketch, cssClass, data, y, 20, color]);
-    }
-
-    /**
-     * @returns - d3 Selection of created Circles
-     * @param canvas - canvas object (decorated)
-     * @param cssClass - drawn elements CSS class
-     * @param data - d3 data to .enter()
-     * @param y - circle y position
-     * @param d - circle diameter
-     * @param color - circle color
-     */
-    function circles([sketch, cssClass, data, y, d, color]: DrawCirclesOptions): void {
-        createElements(arguments[0] as DrawCirclesOptions);
-        drawElements(cssClass, sketch);
-    }
-
-    /**
-     * General update pattern elements
-     */
-    function createElements([sketch, cssClass, data, y, d, color]: DrawCirclesOptions) {
-        const selection = select<HTMLCanvasElement, number>(sketch['canvas']) //
-            .selectAll<SVGCircleElement, number[]>(`circle.${cssClass}`)
-            .data(data);
-
-        selection //
-            .enter()
-            .append('circle')
-            .attr('class', cssClass)
-            .attr('color', color)
-            .attr('y', y)
-            .attr('d', d)
-            .merge(selection)
-            .attr('x', (d) => d);
-
-        selection //
-            .exit()
-            .remove();
-    }
-
-    /**
-     * Canvas drawing
-     */
-    function drawElements(cssClass: string, sketch: P5) {
-        sketch.push();
-        sketch.noStroke();
-
-        const rotation = (new Date().getTime() / 10) % 360;
-
-        selectAll<HTMLCanvasElement, number>(`.${cssClass}`)
-            .nodes()
-            .forEach((node) => {
-                const color = node.getAttribute('color') as string;
-                const x = parseFloat(node.getAttribute('x') as string);
-                const y = parseFloat(node.getAttribute('y') as string);
-                const d = parseFloat(node.getAttribute('d') as string);
-
-                sketch.push();
-                sketch.fill(color);
-                sketch.translate(x, y);
-                sketch.rotateY(rotation);
-                sketch.translate(-x, -y);
-                sketch.circle(x, y, d);
-                sketch.pop();
-            });
-
-        sketch.pop();
+        data.forEach((x) => {
+            sketch.push();
+            sketch.noStroke();
+            sketch.fill(color);
+            sketch.translate(x, y);
+            sketch.rotateY(rotation);
+            sketch.translate(-x, -y);
+            sketch.circle(x, y, 20);
+            sketch.pop();
+        });
     }
 }
