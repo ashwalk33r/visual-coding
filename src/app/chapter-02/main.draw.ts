@@ -77,6 +77,11 @@ export namespace draw {
      * Canvas drawing
      */
     function drawElements(cssClass: string, sketch: P5) {
+        sketch.push();
+        sketch.noStroke();
+
+        const rotation = (new Date().getTime() / 10) % 360;
+
         selectAll<HTMLCanvasElement, number>(`.${cssClass}`)
             .nodes()
             .forEach((node) => {
@@ -85,9 +90,15 @@ export namespace draw {
                 const y = parseFloat(node.getAttribute('y') as string);
                 const d = parseFloat(node.getAttribute('d') as string);
 
-                sketch.noStroke();
+                sketch.push();
                 sketch.fill(color);
+                sketch.translate(x, y);
+                sketch.rotateY(rotation);
+                sketch.translate(-x, -y);
                 sketch.circle(x, y, d);
+                sketch.pop();
             });
+
+        sketch.pop();
     }
 }
