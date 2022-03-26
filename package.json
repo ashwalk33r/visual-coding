@@ -9,6 +9,7 @@
     "prettier": "prettier --check \"./**/*.(js|ts|json|html|scss)\"",
     "prettier:fix": "npm run prettier -- --write",
     "start": "yarn build serve",
+    "serve": "node ./node_modules/http-server/bin/http-server ./dist -d false -c-1 --no-dotfiles",
     "build": "npx webpack",
     "build:watch": "yarn build --watch",
     "analyze": "webpack --profile --json > ./stats.json && npx webpack-bundle-analyzer ./stats.json"
